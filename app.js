@@ -12,7 +12,7 @@ const User = require('./models/user');
 const app = express();
 
 const store = new sessionStore({
-  uri: 'mongodb+srv://xiaerkang:s796L1RGzhIUsp3R@forcourse.kmo8rr2.mongodb.net/shop',
+  uri: 'mongodb+srv://123:pw@forcourse.kmo8rr2.mongodb.net/shop',
   collectioon: 'sessions',
 });
 app.set('view engine', 'ejs');
@@ -34,7 +34,11 @@ app.use(
 );
 
 app.use((req, res, next) => {
-  User.findById('64bfe0f7e2cabba5a0d037b4')
+  if (!req.session.user) {
+    return next();
+  }
+
+  User.findById(req.session.user._id)
     .then((user) => {
       req.user = user;
       next();
